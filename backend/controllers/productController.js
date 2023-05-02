@@ -78,3 +78,44 @@ exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
     product,
   });
 });
+
+// create new review and update
+
+exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
+  const review = {
+    user: req.user._id,
+    name: req.user.name,
+    rating: Number(req.body.rating),
+    comment: req.body.comment,
+  };
+
+  const product = await Product.findById(req.params.id);
+
+  const isReviewed = product.reviews.find(
+    (r) => r.user.toString() === req.user._id.toString()
+  );
+
+  if (isReviewed) {
+    product.reviews.forEach((review) => {
+      if (review.user.toString() === req.user._id.toString()) {
+        review.comment = req.body.comment;
+        review.rating = req.body.rating;
+      }
+    });
+  }
+
+  if (!isReviewed) {
+    product.reviews.push(review);
+    product.numOfReviews = product.reviews.length;
+  }
+
+  product.ratings =
+    product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+    product.reviews.length;
+
+  await product.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    success: true,
+  });
+});
