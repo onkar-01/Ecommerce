@@ -83,21 +83,21 @@ exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
 
 exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
   const review = {
-    user: req.user._id,
+    user: req.user.id,
     name: req.user.name,
     rating: Number(req.body.rating),
     comment: req.body.comment,
   };
 
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(req.body.productId);
 
   const isReviewed = product.reviews.find(
-    (r) => r.user.toString() === req.user._id.toString()
+    (r) => r.user.toString() === req.user.id.toString()
   );
 
   if (isReviewed) {
     product.reviews.forEach((review) => {
-      if (review.user.toString() === req.user._id.toString()) {
+      if (review.user.toString() === req.user.id.toString()) {
         review.comment = req.body.comment;
         review.rating = req.body.rating;
       }
@@ -117,5 +117,69 @@ exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
+  });
+});
+
+// get product reviews
+
+exports.getProductReviews = catchAsyncErrors(async (req, res, next) => {
+  const product = await Product.findById(req.query.id);
+  if (!product) {
+    return next(new ErrorHander("Product not Found", 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    reviews: product.reviews,
+  });
+});
+
+// delete product reviews
+
+exports.deleteProductReviews = catchAsyncErrors(async (req, res, next) => {
+  const product = await Product.findById({
+    _id: req.query.productId,
+  });
+
+  if (!product) {
+    return next(new ErrorHander("Product not Found", 404));
+  }
+
+  const reviews = product.reviews.filter(
+    (review) => review._id.toString() !== req.query.id.toString()
+  );
+
+  const numOfReviews = reviews.length;
+
+  const ratings =
+    product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+    reviews.length;
+
+  await Product.findByIdAndUpdate(
+    req.query.productId,
+    {
+      reviews,
+      ratings,
+      numOfReviews,
+    },
+    {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    }
+  );
+
+  res.status(200).json({
+    success: true,
+  });
+});
+
+// get all products (admin)
+
+exports.getAdminProducts = catchAsyncErrors(async (req, res, next) => {
+  const products = await Product.find();
+  res.status(200).json({
+    success: true,
+    products,
   });
 });
