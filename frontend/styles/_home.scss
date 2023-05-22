@@ -1,0 +1,24 @@
+.home {
+  height: 75%;
+  width: 100%;
+  padding-top: 40vh;
+  overflow: hidden;
+  align-items: center;
+  text-align: center;
+  background-size: cover;
+  h2 {
+    margin-top: 5px;
+  }
+
+  &__name {
+    font-size: 5rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #fff;
+
+    &--last {
+      color: $secondary-color;
+      font-weight: 700;
+    }
+  }
+}

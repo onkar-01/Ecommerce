@@ -1,0 +1,33 @@
+catlist {
+  width: 100%;
+  > .main {
+    width: 80%;
+    margin: 0px auto;
+    margin-top: 50px;
+    > .title {
+      text-align: center;
+      margin-bottom: 1rem;
+
+      color: $primary-color;
+      h2 {
+        text-align: center;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid $secondary-color;
+        color: $primary-color;
+      }
+    }
+    > .catlist {
+      display: flex;
+      margin-left: auto;
+      margin-right: auto;
+      overflow: scroll;
+      overflow-x: scroll;
+      flex-shrink: 3;
+      scroll-behavior: smooth;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+}
