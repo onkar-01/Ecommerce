@@ -5,19 +5,50 @@ const ErrorHander = require("../utils/errorhander");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
 const { isAsyncFunction } = require("util/types");
+const cloudinary = require("cloudinary").v2;
 
 // Register a user => /api/v1/register
 
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
+  console.log(req.body);
+  console.log(req.files.image)
   const { name, email, password } = req.body;
+  const image = req.files.image;
+
+  console.log(name,email,password,image);
+
+  // check for parameter file and body
+  if (!req.body) {
+    return next(new ErrorHander("Please enter all fields", 400));
+  }
+
+  // check for image
+  if (!image) {
+    return next(new ErrorHander("Please upload an image", 400));
+  }
+
+  const result = await cloudinary.uploader.upload(
+    image.tempFilePath,
+    {
+      folder: "test",
+      transformation: { width: 300, height: 300, crop: "limit" },
+    },
+    (err, result) => {
+      if (err) {
+        return next(
+          new ErrorHander("Something went wrong while uploading image", 500)
+        );
+      }
+    }
+  );
 
   const user = await User.create({
     name,
     email,
     password,
     avatar: {
-      public_id: "this is a sample id",
-      url: "profilepicurl",
+      public_id: result.public_id,
+      url: result.secure_url,
     },
   });
 
@@ -276,5 +307,3 @@ exports.deleteUserByAdmin = catchAsyncErrors(async (req, res, next) => {
     message: "User removed Sucessfully",
   });
 });
-
-

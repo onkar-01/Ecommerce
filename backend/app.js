@@ -1,15 +1,22 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const fileUpload = require("express-fileupload");
 
 const app = express();
 
 //middleware
-
 const errorMiddleware = require("./middleware/error");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(
+  fileUpload({
+    useTempFiles: true,
+  })
+);
+
+// Log the configuration
 
 //route Imoprt
 const product = require("./routes/productRoute");
