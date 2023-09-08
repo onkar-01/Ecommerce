@@ -58,9 +58,9 @@ const Login = () => {
               alt="logo"
               width={200}
               height={100}
-              className="ml-auto mr-auto"
+              className="ml-auto mr-auto hidden"
             />
-            <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            <h2 className="mt-10 text-center text-l sm:text-2xl font-bold leading-9 tracking-tight text-gray-900">
               Sign in to your account
             </h2>
           </div>
@@ -74,9 +74,9 @@ const Login = () => {
                 >
                   Email address
                 </label>
-                <div className="mt-2">
+                <div className="mt-2 border-b border-gray-400">
                   <input
-                    className="appearance-none bg-[transparent] border-b  border-gray-600 w-full text-gray-700 mr-3 py-1 px-2  p-24 "
+                    className="appearance-none bg-[transparent]  border-none    w-full text-gray-700 mr-3 py-1 px-2  p-24 "
                     type="email"
                     placeholder="Email"
                     required
@@ -107,14 +107,14 @@ const Login = () => {
                     </a>
                   </div>
                 </div>
-                <div className="mt-2">
+                <div className="mt-2 border-b border-gray-400">
                   <input
                     id="password"
                     name="password"
                     type="password"
                     required
                     placeholder="Password"
-                    className="appearance-none bg-transparent border-b border-gray-600 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                    className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                     value={formData.password}
                     onChange={(e) =>
                       setForm({ ...formData, password: e.target.value })

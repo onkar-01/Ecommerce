@@ -1,6 +1,6 @@
 const express = require("express");
 const {
-  getAllProducts,
+  getProductsByVendor,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -16,7 +16,7 @@ const {
 
 const router = express.Router();
 
-router.route("/products").get(getAllProducts);
+router.route("/:vendorId/products").get(getProductsByVendor);
 
 router
   .route("/product/new")

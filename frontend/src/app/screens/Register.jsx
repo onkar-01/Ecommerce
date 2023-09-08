@@ -20,7 +20,7 @@ const Register = () => {
   const [image, setImage] = useState(null);
   const dispatch = useDispatch();
 
-  const [register, { isLoading }] = useRegisterMutation();
+  const [register] = useRegisterMutation();
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -43,6 +43,7 @@ const Register = () => {
         formData.append("image", image);
         console.log(...formData);
         const res = await register(formData);
+        console.log(res);
         dispatch(setCredentials({ ...res }));
         toast.success("Login Successfully");
         router.push("/");
@@ -55,22 +56,22 @@ const Register = () => {
 
   return (
     <>
-      <FormContainer>
-        <div className="flex  bg-white md:w-2/4 lg:w-1/4 md:h-2/3 w-screen h-screen m-auto relative  md:rounded-md flex-col justify-center px-6 py-12 lg:px-8">
+      <FormContainer className="w-">
+        <div className="flex sm:mt-10 bg-white md:w-2/4 lg:w-1/2 md:h-2/3 w-screen h-screen m-auto relative  md:rounded-md flex-col justify-center px-6 py-12 lg:px-8 sm:mr-[80px] lg:mr-auto lg:pl-[150px]">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
             <Image
               src="/1.png"
               alt="logo"
               width={200}
-              height={80}
-              className="ml-auto mr-auto"
+              height={100}
+              className="ml-auto mr-auto hidden"
             />
-            <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            <h2 className="mt-6  text-center text-l sm:text-2xl font-bold leading-9 tracking-tight text-gray-900">
               Sign Up to your account
             </h2>
           </div>
 
-          <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
+          <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
             <div class="flex items-center justify-center w-full">
               <label
                 for="dropzone-file"
@@ -80,7 +81,7 @@ const Register = () => {
                   <Image
                     src={window.URL.createObjectURL(image)}
                     alt="profile"
-                    width={200}
+                    width={100}
                     height={80}
                     className="ml-auto mr-auto"
                   />
@@ -105,7 +106,7 @@ const Register = () => {
                       <span class="font-semibold">Click to upload</span> or drag
                       and drop
                     </p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                    <p class="text-xs text-center text-gray-500 dark:text-gray-400">
                       SVG, PNG, JPG or GIF (MAX. 800x400px)
                     </p>
                   </div>
@@ -122,15 +123,15 @@ const Register = () => {
 
             <div className="space-y-6">
               <div>
-                <label
+                {/* <label
                   for="email"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
                   Name
-                </label>
-                <div className="mt-2">
+                </label> */}
+                <div className="mt-2 border-b border-gray-400">
                   <input
-                    className="appearance-none bg-transparent border-b border-b-1 border-b-gray-600 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                    className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                     type="text"
                     placeholder="Name"
                     required
@@ -143,15 +144,15 @@ const Register = () => {
                 </div>
               </div>
               <div>
-                <label
+                {/* <label
                   for="email"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
                   Email address
-                </label>
-                <div className="mt-2">
+                </label> */}
+                <div className="mt-2 border-b border-gray-400">
                   <input
-                    className="appearance-none bg-transparent border-b  border-gray-600 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                    className="appearance-none bg-transparent border-none  w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                     type="email"
                     placeholder="Email"
                     required
@@ -165,21 +166,21 @@ const Register = () => {
 
               <div>
                 <div className="flex items-center justify-between">
-                  <label
+                  {/* <label
                     for="password"
                     className="block text-sm font-medium leading-6 text-gray-900"
                   >
                     Password
-                  </label>
+                  </label> */}
                 </div>
-                <div className="mt-2">
+                <div className="mt-2 border-b border-gray-400">
                   <input
                     id="password"
                     name="password"
                     type="password"
                     required
                     placeholder="Password"
-                    className="appearance-none bg-transparent border-b border-b-1 border-b-gray-600 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                    className="appearance-none bg-transparent  border-none  w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -187,21 +188,21 @@ const Register = () => {
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <label
+                  {/* <label
                     for="password"
                     className="block text-sm font-medium leading-6 text-gray-900"
                   >
                     Confirm Password
-                  </label>
+                  </label> */}
                 </div>
-                <div className="mt-2">
+                <div className="mt-2 border-b border-gray-400">
                   <input
                     id="confirmpassword"
                     name="confirmpassword"
                     type="password"
                     required
                     placeholder="Confirm Password"
-                    className="appearance-none bg-transparent border-b border-b-1 border-b-gray-600 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                    className="appearance-none bg-transparent border-none  w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                     value={confirmpassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                   />

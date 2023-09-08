@@ -10,12 +10,8 @@ const cloudinary = require("cloudinary").v2;
 // Register a user => /api/v1/register
 
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-  console.log(req.body);
-  console.log(req.files.image)
   const { name, email, password } = req.body;
   const image = req.files.image;
-
-  console.log(name,email,password,image);
 
   // check for parameter file and body
   if (!req.body) {
@@ -30,7 +26,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
   const result = await cloudinary.uploader.upload(
     image.tempFilePath,
     {
-      folder: "test",
+      folder: "user",
       transformation: { width: 300, height: 300, crop: "limit" },
     },
     (err, result) => {
@@ -305,5 +301,16 @@ exports.deleteUserByAdmin = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "User removed Sucessfully",
+  });
+});
+
+// Get ALL Vendor
+
+exports.getAllVendors = catchAsyncErrors(async (req, res, next) => {
+  const users = await User.find({ role: "vendor" });
+
+  res.status(200).json({
+    success: true,
+    users,
   });
 });

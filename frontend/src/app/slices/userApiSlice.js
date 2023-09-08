@@ -51,14 +51,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
     logout: builder.mutation({
       query: () => ({
         url: `${USERS_URL}/logout`,
-        method: "POST",
+        method: "GET",
       }),
     }),
     register: builder.mutation({
       query: (formData) => ({
         url: `${USERS_URL}/register`,
         method: "POST",
-        body:formData,
+        body: formData,
         credentials: "include",
       }),
     }),

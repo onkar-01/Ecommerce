@@ -15,6 +15,7 @@ const {
   getallUsers,
   updateUserByAdmin,
   deleteUserByAdmin,
+  getAllVendors,
 } = require("../controllers/userController");
 const {
   isAuthenticatedUser,
@@ -46,6 +47,9 @@ router
     isAuthenticatedRoles("admin"),
     deleteUserByAdmin
   );
+
+//get  all vendor for customer
+router.route("/getvendors").get(isAuthenticatedUser, getAllVendors);
 
 router.post("/addimage", (req, res) => {
   const file = req.files.image;

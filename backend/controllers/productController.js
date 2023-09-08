@@ -2,12 +2,42 @@ const Product = require("../models/productModel");
 const ErrorHander = require("../utils/errorhander");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ApiFeatures = require("../utils/apifeatures");
+const cloudinary = require("cloudinary").v2;
 
 // Create new product => /api/v1/admin/product/new
 // only access by admin
 exports.createProduct = catchAsyncErrors(async (req, res, next) => {
   req.body.user = req.user._id;
+  const images = req.files.images;
+  const imagesLinks = [];
 
+  if (!images) {
+    return next(new ErrorHander("Please upload an image", 400));
+  }
+
+  for (let i = 0; i < images.length; i++) {
+    const result = await cloudinary.uploader.upload(
+      images[i].tempFilePath,
+      {
+        folder: "winkeat/products",
+        transformation: { width: 300, height: 300, crop: "limit" },
+      },
+      (err, result) => {
+        if (err) {
+          return next(
+            new ErrorHander("Something went wrong while uploading image", 500)
+          );
+        }
+      }
+    );
+
+    imagesLinks.push({
+      public_id: result.public_id,
+      url: result.secure_url,
+    });
+  }
+
+  req.body.images = imagesLinks;
   const product = await Product.create(req.body);
   res.status(201).json({
     success: true,
@@ -16,13 +46,17 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 });
 
 // get Products
-exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
-  const resultPerPage = 5;
-  const productCount = await Product.countDocuments();
-  const apifeature = ApiFeatures(Product.find(), req.query)
+exports.getProductsByVendor = catchAsyncErrors(async (req, res, next) => {
+  const { vendorId } = req.params; // Extract vendor ID from request params
+
+  const productCount = await Product.countDocuments({ user: vendorId });
+
+  const apifeature = ApiFeatures(
+    Product.find({ user: vendorId }).populate("user", "name email"),
+    req.query
+  )
     .search()
-    .filter()
-    .pagination(resultPerPage);
+    .filter();
 
   const products = await apifeature.query;
   res.status(200).json({
@@ -68,7 +102,10 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
 
 // get single product details
 exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.indById(req.params.id).populate(
+    "user",
+    "name email"
+  );
   if (!product) {
     return next(new ErrorHander("Product not Found", 404));
   }

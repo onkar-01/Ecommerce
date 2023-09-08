@@ -6,7 +6,11 @@ const connectDB = async () => {
     useUnifiedTopology: true,
     useNewUrlParser: true,
   });
-  console.log(`MongoDB Connected: ${conn.connection.host}`);
+  if (conn) {
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } else {
+    console.log(`MongoDB Not Connetcted`);
+  }
 };
 
 const photoCloud = async () => {

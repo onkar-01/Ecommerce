@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
 import React from "react";
+import Home from "./screens/Home";
 
 const page = () => {
   const router = useRouter();
@@ -17,7 +18,11 @@ const page = () => {
     }
   }, [router, userInfo]);
 
-  return <div>page</div>;
+  return (
+    <>
+      <Home />
+    </>
+  );
 };
 
 export default page;
