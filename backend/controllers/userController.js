@@ -12,6 +12,7 @@ const cloudinary = require("cloudinary").v2;
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
   const { name, email, password } = req.body;
   const image = req.files.image;
+  console.log(image);
 
   // check for parameter file and body
   if (!req.body) {
