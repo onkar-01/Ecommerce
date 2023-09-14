@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet, Link } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import { useLocation } from "react-router-dom";
+import SidebarWithHeader from "./components/Header";
 const Layout = () => {
   const location = useLocation();
   const path = location.pathname;
@@ -13,9 +14,9 @@ const Layout = () => {
   } else
     return (
       <div>
-        <Sidebar />
+        {/* <Sidebar /> */}
+        <SidebarWithHeader />
         {/* <div>layout</div> */}
-        <Outlet />
       </div>
     );
 };

@@ -15,34 +15,67 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHander("Please upload an image", 400));
   }
 
-  for (let i = 0; i < images.length; i++) {
-    const result = await cloudinary.uploader.upload(
-      images[i].tempFilePath,
-      {
-        folder: "winkeat/products",
-        transformation: { width: 300, height: 300, crop: "limit" },
-      },
-      (err, result) => {
-        if (err) {
-          return next(
-            new ErrorHander("Something went wrong while uploading image", 500)
-          );
-        }
-      }
+  if (!req.body) {
+    return next(new ErrorHander("Please fill all the required fields", 400));
+  }
+
+  const productExist = await Product.findOne({
+    name: req.body.name,
+    user: req.user._id,
+  });
+  if (productExist) {
+    return next(
+      new ErrorHander("This item is already available in inventory", 400)
     );
+  } else {
+    const result = await cloudinary.uploader.upload(images.tempFilePath, {
+      folder: "winkeat/products",
+      transformation: [
+        { width: 300, height: 300, crop: "fill" },
+        { width: 300, height: 300, gravity: "center", crop: "crop" },
+      ],
+    });
+
+    if (!result) {
+      return next(
+        new ErrorHander("Something went wrong while uploading image", 500)
+      );
+    }
 
     imagesLinks.push({
       public_id: result.public_id,
       url: result.secure_url,
     });
+
+    req.body.images = imagesLinks;
+    const product = await Product.create(req.body);
+    res.status(201).json({
+      success: true,
+      product,
+    });
   }
 
-  req.body.images = imagesLinks;
-  const product = await Product.create(req.body);
-  res.status(201).json({
-    success: true,
-    product,
-  });
+  // for (let i = 0; i < images.length; i++) {
+  //   const result = await cloudinary.uploader.upload(
+  //     images[i].tempFilePath,
+  //     {
+  //       folder: "winkeat/products",
+  //       transformation: { width: 300, height: 300, crop: "limit" },
+  //     },
+  //     (err, result) => {
+  //       if (err) {
+  //         return next(
+  //           new ErrorHander("Something went wrong while uploading image", 500)
+  //         );
+  //       }
+  //     }
+  //   );
+
+  //   imagesLinks.push({
+  //     public_id: result.public_id,
+  //     url: result.secure_url,
+  //   });
+  // }
 });
 
 // get Products
@@ -102,7 +135,7 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
 
 // get single product details
 exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.indById(req.params.id).populate(
+  const product = await Product.findById(req.params.id).populate(
     "user",
     "name email"
   );
@@ -218,5 +251,49 @@ exports.getAdminProducts = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     success: true,
     products,
+  });
+});
+
+exports.incrementProductStock = catchAsyncErrors(async (req, res, next) => {
+  let product = await Product.findById(req.params.id);
+  if (!product) {
+    return next(new ErrorHander("Product not Found", 404));
+  }
+
+  product = await Product.findByIdAndUpdate(
+    req.params.id,
+    { $inc: { stock: 1 } },
+    {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    }
+  );
+
+  res.status(200).json({
+    success: true,
+    product,
+  });
+});
+
+exports.decrementProductStock = catchAsyncErrors(async (req, res, next) => {
+  let product = await Product.findById(req.params.id);
+  if (!product) {
+    return next(new ErrorHander("Product not Found", 404));
+  }
+
+  product = await Product.findByIdAndUpdate(
+    req.params.id,
+    { $inc: { stock: -1 } }, // Decrement the stock by one
+    {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    }
+  );
+
+  res.status(200).json({
+    success: true,
+    product,
   });
 });

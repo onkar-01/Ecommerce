@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import Vendors from "../components/vendors";
 import { emptyCart } from "../slices/cartSlice";
+import NoPage from "./NoPage";
 const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -13,16 +14,17 @@ const Home = () => {
     if (!userInfo) {
       navigate("/auth/login");
     }
-  }, [navigate, userInfo]);
-
-  return (
-    <div>
-      <div className="p-4 mt-3 sm:ml-64">
+  }, []);
+  if (userInfo.role === "user") {
+    return (
+      <div className="mt-20">
         <Vendors />
+        <Toaster />
       </div>
-      <Toaster />
-    </div>
-  );
+    );
+  } else if (userInfo.role === "vendor") {
+    return navigate("/dashboard");
+  } else return navigate("/page-not-found");
 };
 
 export default Home;

@@ -47,7 +47,7 @@ const CartItems = () => {
             />
           ))
         ) : (
-          <h1>Cart is empty</h1>
+          <h1 className="mt-10">Cart is empty</h1>
         )}
       </main>
       <aside>
@@ -88,11 +88,11 @@ const CartItem = ({
   decrement,
   deletehandler,
 }) => (
-  <div className="cartItem w-[90%] border-2 border-[#ff742e] rounded-md shadow-md">
+  <div className="cartItem w-[90%]   border-2 border-[#ff742e] rounded-md shadow-md">
     <img
       loader={() => imgSrc}
       src={imgSrc}
-      className="w-[50px]"
+      className="w-[50px] rounded-md"
       alt="Picture of the author"
     />
     <article>

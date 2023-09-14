@@ -27,7 +27,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
   const result = await cloudinary.uploader.upload(
     image.tempFilePath,
     {
-      folder: "user",
+      folder: "winkeat/user",
       transformation: { width: 300, height: 300, crop: "limit" },
     },
     (err, result) => {

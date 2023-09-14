@@ -9,16 +9,16 @@ const Login = () => {
   const { userInfo } = useSelector((state) => state.auth);
   useEffect(() => {
     if (userInfo) {
-      navigate("/");
+      if (userInfo.role === "user") {
+        navigate("/");
+      } else if (userInfo.role === "vendor") {
+        navigate("/dashboard");
+      }
     }
-  }, [navigate, userInfo]);
+  }, []);
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const { email, password } = formData;
-
-  const checktoast = () => {
-    toast.success("sdfadsf");
-  };
 
   const submitHandler = async (e) => {
     // Use async to handle asynchronous operations
@@ -37,7 +37,11 @@ const Login = () => {
         localStorage.setItem("token", res.token); // Assuming the token is returned as data.token
         toast.success("Logged in Successfully");
         dispatch(setCredentials({ ...res }));
-        navigate("/");
+        if (res.user.role === "user") {
+          navigate("/");
+        } else if (res.user.role === "vendor") {
+          navigate("/dashboard");
+        }
       } else {
         if (response.status === 401) {
           toast.error("Authentication failed. Please check your credentials.");

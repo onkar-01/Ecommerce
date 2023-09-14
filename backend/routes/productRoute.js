@@ -8,6 +8,8 @@ const {
   createProductReview,
   getProductReviews,
   deleteProductReviews,
+  incrementProductStock,
+  decrementProductStock,
 } = require("../controllers/productController");
 const {
   isAuthenticatedUser,
@@ -20,13 +22,29 @@ router.route("/:vendorId/products").get(getProductsByVendor);
 
 router
   .route("/product/new")
-  .post(isAuthenticatedUser, isAuthenticatedRoles("admin"), createProduct);
+  .post(isAuthenticatedUser, isAuthenticatedRoles("vendor"), createProduct);
 
 router
   .route("/product/:id")
-  .put(isAuthenticatedUser, isAuthenticatedRoles("admin"), updateProduct)
-  .delete(isAuthenticatedUser, isAuthenticatedRoles("admin"), deleteProduct)
+  .put(isAuthenticatedUser, isAuthenticatedRoles("vendor"), updateProduct)
+  .delete(isAuthenticatedUser, isAuthenticatedRoles("vendor"), deleteProduct)
   .get(getSingleProduct);
+
+router
+  .route("/product/stock-increment-by-one/:id")
+  .put(
+    isAuthenticatedUser,
+    isAuthenticatedRoles("vendor"),
+    incrementProductStock
+  );
+
+router
+  .route("/product/stock-decrement-by-one/:id")
+  .put(
+    isAuthenticatedUser,
+    isAuthenticatedRoles("vendor"),
+    decrementProductStock
+  );
 
 router.route("/review").put(isAuthenticatedUser, createProductReview);
 
