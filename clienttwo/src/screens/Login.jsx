@@ -15,7 +15,7 @@ const Login = () => {
         navigate("/dashboard");
       }
     }
-  }, []);
+  }, [userInfo]);
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const { email, password } = formData;
@@ -126,7 +126,7 @@ const Login = () => {
                 <p className="text-sm font-light text-gray-500">
                   Don’t have an account yet?{" "}
                   <Link
-                    href="/auth/register"
+                    to="/auth/signup"
                     className="font-medium text-[#ff742e] hover:underline"
                   >
                     Sign up

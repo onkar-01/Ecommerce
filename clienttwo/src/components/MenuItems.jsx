@@ -10,14 +10,14 @@ const MenuCard = ({ product, handler }) => {
   const image = images[0].url;
   const id = _id;
   return (
-    <div className="w-30 lg:w-72  bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
+    <div className=" lg:w-72  bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
       <a href="#">
         <img
           src={image}
           alt="Product"
           className="h-30 w-40 lg:h-80 lg:w-72 object-cover rounded-t-xl"
         />
-        <div className="px-4 py-3 w-30 lg:w-72">
+        <div className="px-4 py-3  lg:w-72">
           <span className="text-gray-400 mr-3 uppercase text-xs">
             {user.name}
           </span>
@@ -26,7 +26,7 @@ const MenuCard = ({ product, handler }) => {
           </p>
           <div className="flex items-center">
             <p className="text-sm sm:text-lg font-semibold text-black cursor-auto my-3">
-              Rs. {price}
+              ₹ {price}
             </p>
             <del>
               {/* <p className="text-xsm text-gray-600 cursor-auto ml-2">$199</p> */}

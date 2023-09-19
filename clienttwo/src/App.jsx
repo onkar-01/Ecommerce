@@ -12,6 +12,15 @@ import Dashboard from "./screens/vendor/Dashboard";
 import Inventory from "./screens/vendor/Inventory";
 import EditInventory from "./screens/vendor/EditInventory";
 import Profile from "./screens/profile";
+import PaymentSuccess from "./screens/PaymentSuccess";
+import Register from "./screens/Register";
+import VerifyUser from "./screens/VerifyUser";
+import PreviousOrders from "./screens/vendor/PreviousOrders";
+import ActiveOrders from "./screens/vendor/ActiveOrders";
+import AllOrders from "./screens/vendor/AllOrders";
+import AllActiveOrderUser from "./screens/AllActiveOrderUser";
+import AllPrevOrderUser from "./screens/AllPrevOrderUser";
+import AddInventory from "./screens/vendor/AddInventory";
 
 const App = () => {
   return (
@@ -20,12 +29,20 @@ const App = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/signup" element={<Register />} />
+          <Route path="/auth/verify-email" element={<VerifyUser />} />
           <Route path="/vendor/:id/menu" element={<Menu />} />
           <Route path="/vendor/:id/cart" element={<Cart />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="user/active-orders" element={<AllActiveOrderUser />} />
+          <Route path="user/previous-orders" element={<AllPrevOrderUser />} />
+          <Route path="/dashboard" element={<AllOrders />} />
           <Route path="/inventory/" element={<Inventory />} />
+          <Route path="/inventory/new" element={<AddInventory />} />
           <Route path="/inventory/:id/edit" element={<EditInventory />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/success" element={<PaymentSuccess />} />
+          <Route path="/previous-orders" element={<PreviousOrders />} />
+          <Route path="/active-orders" element={<ActiveOrders />} />
         </Route>
         <Route path="*" element={<NoPage />} />
       </Routes>

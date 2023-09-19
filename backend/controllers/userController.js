@@ -2,7 +2,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const User = require("../models/userModel");
 const sendToken = require("../utils/jwttoken");
 const ErrorHander = require("../utils/errorhander");
-const sendEmail = require("../utils/sendEmail");
+const { sendEmail } = require("../utils/mailer");
 const crypto = require("crypto");
 const { isAsyncFunction } = require("util/types");
 const cloudinary = require("cloudinary").v2;
@@ -27,7 +27,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
   const result = await cloudinary.uploader.upload(
     image.tempFilePath,
     {
-      folder: "winkeat/user",
+      folder: "winkeat/users",
       transformation: { width: 300, height: 300, crop: "limit" },
     },
     (err, result) => {
@@ -48,8 +48,42 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
       url: result.secure_url,
     },
   });
+  const savedUser = await user.save();
+  console.log(savedUser);
+
+  //send verification email
+  await sendEmail({ email, emailType: "VERIFY", userId: savedUser._id });
 
   sendToken(user, 200, res);
+});
+
+exports.verifyEmail = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const { token } = req.body;
+    console.log(token);
+
+    const user = await User.findOne({
+      verifyToken: token,
+      verifyTokenExpiry: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return next(new ErrorHander("Invalid token", 400));
+    }
+    console.log(user);
+
+    user.isVerfied = true;
+    user.verifyToken = undefined;
+    user.verifyTokenExpiry = undefined;
+    await user.save();
+
+    return res.json({
+      message: "Email verified successfully",
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 });
 
 // Login User => /api/v1/login

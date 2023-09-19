@@ -11,7 +11,7 @@ const Menu = () => {
     if (!userInfo) {
       navigate("/auth/login");
     }
-  }, []);
+  }, [userInfo]);
   const params = useParams();
   console.log(params.id);
 
@@ -24,9 +24,8 @@ const Menu = () => {
         <Toaster />
       </div>
     );
-  } else {
-    return <NoPage />;
   }
+  return navigate("/no-page-found");
 };
 
 export default Menu;

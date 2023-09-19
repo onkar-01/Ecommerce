@@ -41,8 +41,14 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  resetPasswordToken: String,
-  resetPasswordExpire: Date,
+  isVerfied: {
+    type: Boolean,
+    default: false,
+  },
+  forgotPasswordToken: String,
+  forgotPasswordTokenExpiry: Date,
+  verifyToken: String,
+  verifyTokenExpiry: Date,
 });
 
 // Encrypting password before saving user

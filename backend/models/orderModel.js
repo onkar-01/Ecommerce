@@ -1,36 +1,6 @@
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
-  shippingInfo: {
-    address: {
-      type: String,
-      required: true,
-    },
-    city: {
-      type: String,
-      required: true,
-    },
-    state: {
-      type: String,
-      required: true,
-    },
-    country: {
-      type: String,
-      required: true,
-    },
-    pinCode: {
-      type: Number,
-      required: true,
-    },
-    phoneNumber: {
-      type: Number,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-  },
   orderItems: [
     {
       name: {
@@ -54,6 +24,12 @@ const orderSchema = new mongoose.Schema({
         ref: "Product",
         required: true,
       },
+      status: {
+        type: String,
+        required: true,
+        enum: ["rejected", "completed", "pending", "in progress", "delivered"],
+        default: "pending",
+      },
     },
   ],
 
@@ -62,44 +38,20 @@ const orderSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  paymentInfo: {
-    id: {
-      type: String,
-      required: true,
-    },
-    status: {
-      type: String,
-      required: true,
-    },
-  },
-  paidAt: {
-    type: Date,
+  vendor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
-  itemsPrice: {
-    type: Number,
-    default: 0,
-    required: true,
-  },
-  taxPrice: {
-    type: Number,
-    default: 0,
-    required: true,
-  },
-  shippingPrice: {
-    type: Number,
-    default: 0,
-    required: true,
+  paymentStatus: {
+    type: String,
+    enum: ["pending", "paid", "failed"],
+    default: "pending",
   },
   totalPrice: {
     type: Number,
     default: 0,
     required: true,
-  },
-  orderStatus: {
-    type: String,
-    required: true,
-    default: "Processing",
   },
   deliverdAt: Date,
   createdAt: {

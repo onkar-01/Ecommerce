@@ -9,7 +9,9 @@ const Layout = () => {
 
   if (path === "/auth/login") {
     return <Outlet />;
-  } else if (path === "/auth/register") {
+  } else if (path === "/auth/signup") {
+    return <Outlet />;
+  } else if (path === "/auth/verify-email") {
     return <Outlet />;
   } else
     return (

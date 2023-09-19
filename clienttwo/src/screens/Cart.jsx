@@ -6,12 +6,12 @@ import { Toaster } from "react-hot-toast";
 import NoPage from "./NoPage";
 const Cart = () => {
   const navigate = useNavigate();
-  const { userInfo } = useSelector((state) => state.auth);
+  const userInfo = useSelector((state) => state.auth.userInfo);
   useEffect(() => {
     if (!userInfo) {
       navigate("/auth/login");
     }
-  }, []);
+  }, [userInfo]);
   if (userInfo.role === "user") {
     return (
       <>
@@ -19,7 +19,8 @@ const Cart = () => {
         <Toaster />
       </>
     );
-  } else return <NoPage />;
+  }
+  return navigate("/no-page-found");
 };
 
 export default Cart;

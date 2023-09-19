@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import Vendors from "../components/vendors";
 import { emptyCart } from "../slices/cartSlice";
 import NoPage from "./NoPage";
+
 const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const Home = () => {
     if (!userInfo) {
       navigate("/auth/login");
     }
-  }, []);
+  }, [userInfo]);
   if (userInfo.role === "user") {
     return (
       <div className="mt-20">
@@ -24,7 +25,8 @@ const Home = () => {
     );
   } else if (userInfo.role === "vendor") {
     return navigate("/dashboard");
-  } else return navigate("/page-not-found");
+  }
+  return navigate("/page-not-found");
 };
 
 export default Home;

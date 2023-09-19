@@ -21,7 +21,7 @@ const InventoryCard = ({ product, key }) => {
       if (response.ok) {
         const updatedProduct = await response.json();
         // setProduct(updatedProduct.product);
-        toast.success("Stock decremented successfully");
+        toast.success("Stock incremented successfully");
       } else {
         toast.error("Error decrementing stock: " + response.statusText);
       }
@@ -86,7 +86,7 @@ const InventoryCard = ({ product, key }) => {
             </button>
           </div>
           <div class="text-lg font-semibold text-slate-500">
-            ${product.price}
+            ₹{product.price}
           </div>
           {product.stock > 0 ? (
             <div class="text-sm font-medium text-slate-700 mt-2">In Stock</div>

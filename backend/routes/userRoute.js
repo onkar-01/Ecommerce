@@ -16,6 +16,7 @@ const {
   updateUserByAdmin,
   deleteUserByAdmin,
   getAllVendors,
+  verifyEmail,
 } = require("../controllers/userController");
 const {
   isAuthenticatedUser,
@@ -24,6 +25,7 @@ const {
 const router = express.Router();
 
 router.route("/register").post(registerUser);
+router.route("/verifyemail").post(verifyEmail);
 router.route("/login").post(loginUser);
 router.route("/logout").get(logout);
 router.route("/password/forgot").post(forgotPassword);

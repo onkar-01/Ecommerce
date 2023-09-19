@@ -81,6 +81,7 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 // get Products
 exports.getProductsByVendor = catchAsyncErrors(async (req, res, next) => {
   const { vendorId } = req.params; // Extract vendor ID from request params
+  console.log(vendorId);
 
   const productCount = await Product.countDocuments({ user: vendorId });
 

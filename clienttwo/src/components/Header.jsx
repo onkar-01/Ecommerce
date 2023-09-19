@@ -3,8 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
 import { logout } from "../slices/authSlice";
 import { toast, Toaster } from "react-hot-toast";
-import { initFlowbite } from "flowbite";
-import { useEffect } from "react";
 import { HiShoppingBag } from "react-icons/hi";
 import { BiSearch } from "react-icons/bi";
 import { setSearchKeyword } from "../slices/searchSlice";
@@ -31,12 +29,10 @@ import {
 } from "@chakra-ui/react";
 import {
   FiHome,
-  FiTrendingUp,
   FiCompass,
   FiStar,
   FiSettings,
   FiMenu,
-  FiBell,
   FiChevronDown,
 } from "react-icons/fi";
 import { MdRestaurantMenu, MdOutlineInventory } from "react-icons/md";
@@ -49,14 +45,14 @@ const SidebarContent = ({ onClose, ...rest }) => {
     ? [
         { name: "Dashboard", icon: FiHome, href: "/dashboard" },
         { name: "Inventory", icon: MdOutlineInventory, href: "/inventory" },
-        { name: "Active Order", icon: FiCompass, href: "/active-order" },
-        { name: "Previous Order", icon: FiStar, href: "/previous-order" },
+        { name: "Active Order", icon: FiCompass, href: "/active-orders" },
+        { name: "Previous Order", icon: FiStar, href: "/previous-orders" },
         { name: "Settings", icon: FiSettings, href: "/profile" },
       ]
     : [
         { name: "Home", icon: FiHome, href: "/" },
-        { name: "Active Order", icon: FiCompass, href: "/active-order" },
-        { name: "Previous Order", icon: FiStar, href: "/previous-order" },
+        { name: "Active Order", icon: FiCompass, href: "/user/active-orders" },
+        { name: "Previous Order", icon: FiStar, href: "/user/previous-orders" },
         { name: "User", icon: FiSettings, href: "/profile" },
       ];
 
@@ -131,6 +127,8 @@ const MobileNav = ({ onOpen, ...rest }) => {
   const vendorId = useSelector((state) => state.vendor.vendorId);
   console.log(vendorId);
 
+  const userImg = userInfo.avatar.url;
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const signoutHandler = async () => {
@@ -148,11 +146,16 @@ const MobileNav = ({ onOpen, ...rest }) => {
   const location = useLocation();
   const path = location.pathname;
 
-  const pathmenu = path.search("/menu");
-  let flag = false;
-  if (pathmenu === -1) {
-    flag = true;
+  const pathmenu1 = path.search("/menu");
+  const pathmenu2 = path.search("/inventory");
+  console.log(pathmenu1, pathmenu2);
+
+  var flag = true;
+  if (pathmenu1 !== -1 || pathmenu2 !== -1) {
+    flag = false;
   }
+
+  console.log(flag);
 
   const searchHandler = (e) => {
     console.log(e.target.value);
@@ -200,16 +203,16 @@ const MobileNav = ({ onOpen, ...rest }) => {
             >
               <Image h={10} src="/logo2.png" />
             </Text>
-            <div className="relative flex  mr-6 my-2">
+            <div className="relative flex  mr-2 sm:mr-6 my-2">
               <input
                 type="text"
-                className="bg-purple-white shadow rounded border-0 p-3"
+                className="bg-purple-white shadow-lg rounded border-0 p-2"
                 placeholder="Search by name..."
                 onChange={(e) => {
                   searchHandler(e);
                 }}
               />
-              <div className=" pin-r pin-t mt-4 ml-[-25px] text-purple-lighter">
+              <div className=" pin-r pin-t mt-[13px] ml-[-25px] text-purple-lighter">
                 <BiSearch />
               </div>
             </div>
@@ -225,7 +228,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
                 _focus={{ boxShadow: "none" }}
               >
                 <HStack>
-                  <Avatar size={"sm"} src={userInfo.avatar.url} />
+                  <Avatar size={"sm"} src={userImg} />
                   <VStack
                     display={{ base: "none", md: "flex" }}
                     alignItems="flex-start"
