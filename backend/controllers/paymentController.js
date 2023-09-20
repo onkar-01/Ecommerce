@@ -62,6 +62,20 @@ exports.paymentverification = async (req, res) => {
     const isAuthentic = expectedSignature === razorpay_signature;
 
     if (isAuthentic) {
+      // Check if the payment has already been processed
+      const existingPayment = await Payment.findOne({
+        razorpay_order_id,
+        razorpay_payment_id,
+      });
+
+      if (existingPayment) {
+        // Payment is already processed
+        return res.status(400).json({
+          status: false,
+          message: "Payment already processed",
+        });
+      }
+
       // Save payment details to the database
       const payment = new Payment({
         user: req.user._id,
@@ -71,9 +85,8 @@ exports.paymentverification = async (req, res) => {
       });
       await payment.save();
 
-      // Clear the user's cart
       // Update the order's payment status
-      await Order.findOneAndUpdate(
+      const updatedOrder = await Order.findOneAndUpdate(
         {
           user: req.user._id,
           paymentStatus: "pending",
@@ -83,9 +96,17 @@ exports.paymentverification = async (req, res) => {
         }
       );
 
+      if (!updatedOrder) {
+        // Handle the case where the order could not be updated
+        return res.status(500).json({
+          status: false,
+          message: "Failed to update order status",
+        });
+      }
+
       // Redirect to the success page
       res.redirect(
-        `http://localhost:4000/success?razorpay_order_id=${razorpay_order_id}&razorpay_payment_id=${razorpay_payment_id}&razorpay_signature=${razorpay_signature}`
+        `http://localhost:5173/success?razorpay_order_id=${razorpay_order_id}&razorpay_payment_id=${razorpay_payment_id}&razorpay_signature=${razorpay_signature}`
       );
     } else {
       // Payment failed
@@ -98,11 +119,10 @@ exports.paymentverification = async (req, res) => {
     console.error(error);
     res.status(500).json({
       status: false,
-      message: error,
+      message: error.message,
     });
   }
 };
-
 exports.getApi = (req, res) => {
   res.status(200).json({
     key: process.env.RAZORPAY_KEY_ID,
