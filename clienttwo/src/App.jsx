@@ -17,7 +17,6 @@ import Register from "./screens/Register";
 import VerifyUser from "./screens/VerifyUser";
 import PreviousOrders from "./screens/vendor/PreviousOrders";
 import ActiveOrders from "./screens/vendor/ActiveOrders";
-import AllOrders from "./screens/vendor/AllOrders";
 import AllActiveOrderUser from "./screens/AllActiveOrderUser";
 import AllPrevOrderUser from "./screens/AllPrevOrderUser";
 import AddInventory from "./screens/vendor/AddInventory";
@@ -39,7 +38,7 @@ const App = () => {
           <Route path="/vendor/:id/cart" element={<Cart />} />
           <Route path="user/active-orders" element={<AllActiveOrderUser />} />
           <Route path="user/previous-orders" element={<AllPrevOrderUser />} />
-          <Route path="/dashboard" element={<AllOrders />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/inventory/" element={<Inventory />} />
           <Route path="/inventory/new" element={<AddInventory />} />
           <Route path="/inventory/:id/edit" element={<EditInventory />} />

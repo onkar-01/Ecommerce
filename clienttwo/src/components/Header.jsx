@@ -92,17 +92,6 @@ const SidebarWithHeader = () => {
 };
 
 const SidebarContent = ({ onClose, ...rest }) => {
-  const loader = async () => {
-    const userInfo = await useSelector((state) => state.auth.userInfo);
-    if (!userInfo) {
-      return redirect("/login");
-    }
-    return null;
-  };
-
-  useEffect(() => {
-    loader();
-  }, [loader]);
   const userInfo = useSelector((state) => state.auth.userInfo);
   const isVendor = userInfo.role === "vendor";
 
@@ -148,17 +137,6 @@ const SidebarContent = ({ onClose, ...rest }) => {
 };
 
 const NavItem = ({ icon, href, children, ...rest }) => {
-  const loader = async () => {
-    const userInfo = await useSelector((state) => state.auth.userInfo);
-    if (!userInfo) {
-      return redirect("/login");
-    }
-    return null;
-  };
-
-  useEffect(() => {
-    loader();
-  }, [loader]);
   return (
     <Link to={href}>
       <Box
@@ -198,17 +176,6 @@ const NavItem = ({ icon, href, children, ...rest }) => {
 };
 
 const MobileNav = ({ onOpen, ...rest }) => {
-  const loader = async () => {
-    const userInfo = await useSelector((state) => state.auth.userInfo);
-    if (!userInfo) {
-      return redirect("/login");
-    }
-    return null;
-  };
-
-  useEffect(() => {
-    loader();
-  }, [loader]);
   const userInfo = useSelector((state) => state.auth.userInfo);
   const cartItems = useSelector((state) => state.cart.cartItems);
   const vendorId = useSelector((state) => state.vendor.vendorId);

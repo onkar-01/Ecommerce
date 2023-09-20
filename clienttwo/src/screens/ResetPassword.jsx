@@ -97,7 +97,7 @@ const ResetPassword = () => {
                   onClick={submitHandler}
                   className="w-full text-white bg-[#ff742e] hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 >
-                  Sign in
+                  Update Password
                 </button>
               </form>
             </div>
