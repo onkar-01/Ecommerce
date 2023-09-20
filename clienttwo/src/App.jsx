@@ -21,6 +21,8 @@ import AllOrders from "./screens/vendor/AllOrders";
 import AllActiveOrderUser from "./screens/AllActiveOrderUser";
 import AllPrevOrderUser from "./screens/AllPrevOrderUser";
 import AddInventory from "./screens/vendor/AddInventory";
+import ForgotPassword from "./screens/ForgotPassword";
+import ResetPassword from "./screens/ResetPassword";
 
 const App = () => {
   return (
@@ -31,6 +33,8 @@ const App = () => {
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/signup" element={<Register />} />
           <Route path="/auth/verify-email" element={<VerifyUser />} />
+          <Route path="/auth/reset-password" element={<ResetPassword />} />
+          <Route path="/auth/password/forgot" element={<ForgotPassword />} />
           <Route path="/vendor/:id/menu" element={<Menu />} />
           <Route path="/vendor/:id/cart" element={<Cart />} />
           <Route path="user/active-orders" element={<AllActiveOrderUser />} />

@@ -6,12 +6,18 @@ import SidebarWithHeader from "./components/Header";
 const Layout = () => {
   const location = useLocation();
   const path = location.pathname;
+  const withSidebar = path.search("/auth");
+  console.log(withSidebar);
 
   if (path === "/auth/login") {
     return <Outlet />;
   } else if (path === "/auth/signup") {
     return <Outlet />;
   } else if (path === "/auth/verify-email") {
+    return <Outlet />;
+  } else if (path === "/auth/password/forgot") {
+    return <Outlet />;
+  } else if (path === "/auth/reset-password") {
     return <Outlet />;
   } else
     return (

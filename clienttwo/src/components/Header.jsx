@@ -137,6 +137,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
         method: "GET",
       });
       dispatch(logout());
+      localStorage.removeItem("token");
       navigate("/auth/login");
       return null;
     } catch (err) {
