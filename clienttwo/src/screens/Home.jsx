@@ -12,10 +12,10 @@ const Home = () => {
   const { userInfo } = useSelector((state) => state.auth);
   useEffect(() => {
     dispatch(emptyCart());
-    if (!userInfo) {
+    if (!localStorage.getItem("userInfo")) {
       navigate("/auth/login");
     }
-  }, [userInfo]);
+  }, [userInfo, navigate]);
   if (userInfo.role === "user") {
     return (
       <div className="mt-20">

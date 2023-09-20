@@ -155,8 +155,9 @@ const OrderCard = ({ item }) => {
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#ff9d4e] focus:border-[#ffc259] block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             onChange={updateStatus}
           >
-            <option selected>Product Status</option>
-            <option value="pending">pending</option>
+            <option selected value="pending">
+              pending
+            </option>
             <option value="rejected">rejected</option>
             <option value="in progress">in progress</option>
             <option value="completed">completed</option>

@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  redirect,
+  useLocation,
+  Outlet,
+} from "react-router-dom";
 import { logout } from "../slices/authSlice";
 import { toast, Toaster } from "react-hot-toast";
 import { HiShoppingBag } from "react-icons/hi";
@@ -37,7 +43,66 @@ import {
 } from "react-icons/fi";
 import { MdRestaurantMenu, MdOutlineInventory } from "react-icons/md";
 
+const SidebarWithHeader = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const path = location.pathname;
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const userInfo = useSelector((state) => state.auth.userInfo);
+
+  useEffect(() => {
+    if (!userInfo) {
+      navigate("/auth/login");
+    }
+  }, [userInfo, navigate]);
+
+  if (!userInfo) {
+    // You can return a loading message or something else while userInfo is being checked
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <Box minH="100vh" bg={useColorModeValue("#fff", "#fff")}>
+      <SidebarContent
+        onClose={() => onClose}
+        display={{ base: "none", md: "block" }}
+      />
+      <Drawer
+        isOpen={isOpen}
+        placement="left"
+        onClose={onClose}
+        returnFocusOnClose={false}
+        onOverlayClick={onClose}
+        size="full"
+      >
+        <DrawerContent>
+          <SidebarContent onClose={onClose} />
+        </DrawerContent>
+      </Drawer>
+      {/* mobilenav */}
+      <MobileNav onOpen={onOpen} />
+      <Box ml={{ base: 0, md: 60 }} p="4">
+        <Outlet />
+      </Box>
+    </Box>
+  );
+};
+
 const SidebarContent = ({ onClose, ...rest }) => {
+  const loader = async () => {
+    const userInfo = await useSelector((state) => state.auth.userInfo);
+    if (!userInfo) {
+      return redirect("/login");
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    loader();
+  }, [loader]);
   const userInfo = useSelector((state) => state.auth.userInfo);
   const isVendor = userInfo.role === "vendor";
 
@@ -83,6 +148,17 @@ const SidebarContent = ({ onClose, ...rest }) => {
 };
 
 const NavItem = ({ icon, href, children, ...rest }) => {
+  const loader = async () => {
+    const userInfo = await useSelector((state) => state.auth.userInfo);
+    if (!userInfo) {
+      return redirect("/login");
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    loader();
+  }, [loader]);
   return (
     <Link to={href}>
       <Box
@@ -122,6 +198,17 @@ const NavItem = ({ icon, href, children, ...rest }) => {
 };
 
 const MobileNav = ({ onOpen, ...rest }) => {
+  const loader = async () => {
+    const userInfo = await useSelector((state) => state.auth.userInfo);
+    if (!userInfo) {
+      return redirect("/login");
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    loader();
+  }, [loader]);
   const userInfo = useSelector((state) => state.auth.userInfo);
   const cartItems = useSelector((state) => state.cart.cartItems);
   const vendorId = useSelector((state) => state.vendor.vendorId);
@@ -273,43 +360,6 @@ const MobileNav = ({ onOpen, ...rest }) => {
         </HStack>
       </Flex>
     </div>
-  );
-};
-
-const SidebarWithHeader = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const path = location.pathname;
-  const userInfo = useSelector((state) => state.auth.userInfo);
-  const cartItems = useSelector((state) => state.cart.cartItems);
-
-  return (
-    <Box minH="100vh" bg={useColorModeValue("#fff", "#fff")}>
-      <SidebarContent
-        onClose={() => onClose}
-        display={{ base: "none", md: "block" }}
-      />
-      <Drawer
-        isOpen={isOpen}
-        placement="left"
-        onClose={onClose}
-        returnFocusOnClose={false}
-        onOverlayClick={onClose}
-        size="full"
-      >
-        <DrawerContent>
-          <SidebarContent onClose={onClose} />
-        </DrawerContent>
-      </Drawer>
-      {/* mobilenav */}
-      <MobileNav onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 60 }} p="4">
-        <Outlet />
-      </Box>
-    </Box>
   );
 };
 
