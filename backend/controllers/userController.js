@@ -128,63 +128,42 @@ exports.logout = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-// Forgot Password => /api/v1/password/forgot
-
-exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
-  const user = await User.findOne({
-    email: req.body.email,
-  });
-
-  if (!user) {
-    return next(new ErrorHander("User not found with this email", 404));
-  }
-
-  // Get reset token
-  const resetToken = user.getResetPasswordToken();
-
-  await user.save({ validateBeforeSave: false });
-
-  // Create reset password url
-
-  const resetUrl = `${req.protocol}://${req.get(
-    "host"
-  )}/api/v1/password/reset/${resetToken}`;
-
-  const message = `Your password reset token is as follows:\n\n${resetUrl}\n\nIf you have not requested this email, then ignore it.`;
-
+exports.forgotPassword = async (req, res, next) => {
   try {
+    const { email } = req.body;
+
+    // Check if the user with the provided email exists
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Send a password reset email with a link that includes the resetToken
+
     await sendEmail({
       email: user.email,
-      subject: "Ecommerce Password Recovery",
-      message,
+      emailType: "RESET",
+      userId: user._id,
     });
 
-    res.status(200).json({
-      success: true,
-      message: `Email sent to ${user.email}`,
-    });
+    res.status(200).json({ message: "Password reset email sent successfully" });
   } catch (error) {
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
-
-    await user.save({ validateBeforeSave: false });
-    return next(new ErrorHander(error.message, 500));
+    next(error);
   }
-});
-
+};
 // Reset Password => /api/v1/password/reset/:token
 
 exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
+  const token = req.body.token;
   // Hash URL token
-  const resetPasswordToken = crypto
-    .createHash("sha256")
-    .update(req.params.token)
-    .digest("hex");
 
   const user = await User.findOne({
-    resetPasswordToken,
-    resetPasswordExpire: { $gt: Date.now() },
+    forgotPasswordToken: token,
+    forgotPasswordTokenExpiry: { $gt: Date.now() },
   });
+
+  console.log(user);
 
   if (!user) {
     return next(
@@ -203,8 +182,8 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 
   user.password = req.body.password;
 
-  user.resetPasswordToken = undefined;
-  user.resetPasswordExpire = undefined;
+  user.forgotPasswordToken = undefined;
+  user.forgotPasswordTokenExpiry = undefined;
 
   await user.save();
 

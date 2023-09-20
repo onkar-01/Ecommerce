@@ -1,4 +1,3 @@
-
 const dotenv = require("dotenv");
 const crypto = require("crypto");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
@@ -10,7 +9,6 @@ const shortid = require("shortid");
 const Razorpay = require("razorpay");
 
 dotenv.config({ path: "./config.env" });
-
 
 var instance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -87,7 +85,7 @@ exports.paymentverification = async (req, res) => {
 
       // Redirect to the success page
       res.redirect(
-        `http://localhost:5173/success?razorpay_order_id=${razorpay_order_id}&razorpay_payment_id=${razorpay_payment_id}&razorpay_signature=${razorpay_signature}`
+        `http://localhost:4000/success?razorpay_order_id=${razorpay_order_id}&razorpay_payment_id=${razorpay_payment_id}&razorpay_signature=${razorpay_signature}`
       );
     } else {
       // Payment failed

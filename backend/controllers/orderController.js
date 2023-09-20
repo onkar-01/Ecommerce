@@ -177,7 +177,7 @@ exports.getActiveOrdersByUser = catchAsyncErrors(async (req, res, next) => {
     }
   }
 
-  console.log(orderItemsList);
+  // console.log(orderItemsList);
 
   res.status(200).json({ orderItems: orderItemsList.reverse() });
 });
