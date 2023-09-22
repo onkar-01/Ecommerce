@@ -51,7 +51,7 @@ const InventoryForm = () => {
         formData.append("category", category);
         formData.append("price", price);
         formData.append("stock", stock);
-        formData.append("images", image);
+        formData.append("image", image);
         console.log(...formData);
         const response = await fetch("/api/v1/product/new", {
           method: "POST",

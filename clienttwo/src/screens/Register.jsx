@@ -60,7 +60,8 @@ const Register = () => {
           toast.error(data.message);
         }
       } else {
-        toast.error("This item is alread already available in intventory");
+        toast.error("The user is already registered");
+        console.log(response);
       }
     } catch (e) {
       console.log(e);

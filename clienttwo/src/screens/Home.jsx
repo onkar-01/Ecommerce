@@ -8,25 +8,27 @@ import NoPage from "./NoPage";
 
 const Home = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { userInfo } = useSelector((state) => state.auth);
+  const userInfo = useSelector((state) => state.auth.userInfo);
   useEffect(() => {
-    dispatch(emptyCart());
-    if (!localStorage.getItem("userInfo")) {
+    if (userInfo) {
+      if (userInfo.role === "vendor") {
+        navigate("/dashboard");
+      }
+    } else if (!userInfo) {
       navigate("/auth/login");
     }
   }, [userInfo, navigate]);
-  if (userInfo.role === "user") {
-    return (
-      <div className="mt-20">
-        <Vendors />
-        <Toaster />
-      </div>
-    );
-  } else if (userInfo.role === "vendor") {
-    return navigate("/dashboard");
+
+  if (!userInfo) {
+    // You can return a loading message or something else while userInfo is being checked
+    return <div>Loading...</div>;
   }
-  return navigate("/page-not-found");
+  return (
+    <div className="mt-20">
+      <Vendors />
+      <Toaster />
+    </div>
+  );
 };
 
 export default Home;
